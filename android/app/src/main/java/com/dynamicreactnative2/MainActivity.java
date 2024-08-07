@@ -47,6 +47,6 @@ public class MainActivity extends ReactActivity {
     super.onCreate(savedInstanceState);
     setTheme(R.style.AppTheme);
 //    EversafeHelper.getInstance().initialize("http://103.96.146.236:4443/eversafe", "539018339F5D7CE8", null);
-//    EversafeHelper.getInstance().initialize("http://103.96.146.236:4443/eversafe", "870A5359781713B8", null);
+    EversafeHelper.getInstance().initialize("http://103.96.146.239:4443/eversafe", "870A5359781713B8", null);
   }
 }
