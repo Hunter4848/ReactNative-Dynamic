@@ -1,55 +1,46 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Alert } from 'react-native';
+import { NativeModules } from 'react-native';
+
+const { LoginModule } = NativeModules;
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // Lakukan validasi login atau kirim data ke backend di sini
-    console.log('Username:', username);
-    console.log('Password:', password);
+    if (username && password) {
+      LoginModule.login(username, password, (error, successMessage) => {
+        if (error) {
+          Alert.alert('Login Error', error);
+        } else {
+          Alert.alert('Login Success', successMessage);
+          // Lanjutkan ke halaman berikutnya jika diperlukan
+        }
+      });
+    } else {
+      Alert.alert('Input Error', 'Please enter both username and password.');
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    <View>
       <TextInput
-        style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
       />
       <TextInput
-        style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
+        secureTextEntry={true}
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
       />
       <Button title="Login" onPress={handleLogin} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-  },
-});
 
 export default LoginScreen;
