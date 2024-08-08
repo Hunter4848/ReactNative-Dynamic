@@ -7,11 +7,15 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import kr.co.everspin.eversafe.components.base64.Base64;
 
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+
+import kr.co.everspin.eversafe.EncryptionContext;
+import kr.co.everspin.eversafe.EncryptionContextAction;
 import kr.co.everspin.eversafe.EversafeHelper;
+import kr.co.everspin.eversafe.components.base64.Base64;
 
 
 public class LoginModule extends ReactContextBaseJavaModule {
@@ -70,7 +74,36 @@ public class LoginModule extends ReactContextBaseJavaModule {
         }.setTimeout(10000).execute();
     }
 
+    @ReactMethod
+    public void decrypt(String encryptedPayload, Callback callback) {
+        EversafeHelper.getInstance().getEncryptionContext(200, new EncryptionContextAction() {
+            @Override
+            public void doAction(EncryptionContext encryptionContext) {
+                try {
+                    // Decode the encrypted payload from Base64
+                    byte[] bytePayload = Base64.decodeBase64(encryptedPayload);
+                    Log.d("bytePayload", String.valueOf(bytePayload));
+
+                    // Decrypt the payload
+                    byte[] byteDecrypt = encryptionContext.decrypt(bytePayload);
+                    Log.d("byteDecrypt", String.valueOf(byteDecrypt));
+
+                    // Convert decrypted byte array to String
+                    String decryptPayload = new String(byteDecrypt, StandardCharsets.UTF_8);
+                    Log.d("decryptPayload", String.valueOf(decryptPayload));
+
+                    // Send decrypted payload back to React Native
+                    callback.invoke(null, decryptPayload);
+                } catch (Exception e) {
+                    // Handle exception and send error message to React Native
+                    callback.invoke("Error: " + e.getMessage(), null);
+                }
+            }
+        });
+    }
+
 }
+
 
 
     /*@ReactMethod
