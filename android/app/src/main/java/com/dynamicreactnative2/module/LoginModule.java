@@ -1,25 +1,17 @@
 package com.dynamicreactnative2.module;
 
-import android.content.Intent;
 import android.util.Log;
 
-import com.dynamicreactnative2.DetailUserActivity;
 import com.dynamicreactnative2.model.MEncryptedRequest;
-import com.dynamicreactnative2.model.UserDetail;
-import com.dynamicreactnative2.network.ApiConfig;
-import com.dynamicreactnative2.response.EverspinResponse;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.google.gson.Gson;
+import kr.co.everspin.eversafe.components.base64.Base64;
 
 import org.json.JSONObject;
 
 import kr.co.everspin.eversafe.EversafeHelper;
-import kr.co.everspin.eversafe.components.base64.Base64;
-import retrofit2.Call;
-import retrofit2.Response;
 
 
 public class LoginModule extends ReactContextBaseJavaModule {
@@ -38,6 +30,51 @@ public class LoginModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void login(String username, String password, Callback callback) {
+        new EversafeHelper.GetVerificationTokenTask() {
+            @Override
+            public void onAction(byte[] bytes, String verificationTokenAsBase64, int result) {
+                Log.d("verification", "verificationTokenAsBase64: " + verificationTokenAsBase64);
+
+                EversafeHelper.getInstance().getEncryptionContext(200, encryptionContext -> {
+                    try {
+                        JSONObject json = new JSONObject();
+                        json.put("user_name", username);
+                        json.put("user_password", password);
+
+                        byte[] bytes1 = json.toString().getBytes();
+
+                        String payload = Base64.encodeBase64String(encryptionContext.encrypt(bytes1));
+                        Log.d("payload", payload);
+
+                        String evToken = kr.co.everspin.eversafe.components.base64.Base64.encodeBase64String(encryptionContext.encrypt(encryptionContext.getVerificationToken()));
+                        Log.d("evToken", evToken);
+
+                        String evEncDesc = kr.co.everspin.eversafe.components.base64.Base64.encodeBase64String(encryptionContext.getContextDescriptor());
+                        Log.d("evEncDesc", evEncDesc);
+
+                        MEncryptedRequest encryptedRequest = new MEncryptedRequest(payload, evToken, evEncDesc);
+                        Log.d("encryptedRequest", encryptedRequest.toString());
+
+                        JSONObject encryptedRequestJson = new JSONObject();
+                        encryptedRequestJson.put("payload", payload);
+                        encryptedRequestJson.put("evToken", evToken);
+                        encryptedRequestJson.put("evEncDesc", evEncDesc);
+
+                        callback.invoke(null, encryptedRequestJson.toString());
+
+                    } catch (Exception e) {
+                        callback.invoke("Error: " + e.getMessage(), null);
+                    }
+                });
+            }
+        }.setTimeout(10000).execute();
+    }
+
+}
+
+
+    /*@ReactMethod
+    public MEncryptedRequest login(String username, String password, Callback callback) {
         // Implementasi kode login dari fungsi `login()` di sini
         // Contoh:
         EversafeHelper.getInstance().getEncryptionContext(200, encryptionContext -> {
@@ -56,7 +93,7 @@ public class LoginModule extends ReactContextBaseJavaModule {
                 MEncryptedRequest encryptedRequest = new MEncryptedRequest(payload, evToken, evEncDesc);
                 Log.d("encryptedRequest", encryptedRequest.toString());
 
-                ApiConfig.getLoginInstance().postLogin(encryptedRequest).enqueue(new retrofit2.Callback<EverspinResponse>() {
+                *//*ApiConfig.getLoginInstance().postLogin(encryptedRequest).enqueue(new retrofit2.Callback<EverspinResponse>() {
                     @Override
                     public void onResponse(Call<EverspinResponse> call, Response<EverspinResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -91,10 +128,9 @@ public class LoginModule extends ReactContextBaseJavaModule {
                         callback.invoke("Error: " + t.getMessage(), null);
                         Log.e("login", t.toString());
                     }
-                });
+                });*//*
             } catch (Exception e) {
                 callback.invoke("Error: " + e.getMessage(), null);
             }
         });
-    }
-}
+    }*/

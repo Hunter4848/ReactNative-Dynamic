@@ -18,12 +18,30 @@
 
    const handleLogin = () => {
      if (username && password) {
-       LoginModule.login(username, password, (error, successMessage) => {
+       LoginModule.login(username, password, (error, encryptedRequestJson) => {
          if (error) {
            Alert.alert('Login Error', error);
          } else {
-           Alert.alert('Login Success', successMessage);
-           // Lanjutkan ke halaman berikutnya jika diperlukan
+           // Mengirim encryptedRequestJson ke backend
+           const request = JSON.parse(encryptedRequestJson);
+
+           fetch('http://10.8.12.37:9002/everspin/user_login_eversafe', {
+             method: 'POST',
+             headers: {
+               'Content-Type': 'application/json',
+             },
+             body: JSON.stringify(request),
+           })
+           .then(response => response.json())
+           .then(data => {
+             console.log('Success:', data);
+             Alert.alert('Login Success', 'You have successfully logged in!');
+             // Lanjutkan ke halaman berikutnya jika diperlukan
+           })
+           .catch((error) => {
+             console.error('Error:', error);
+             Alert.alert('Network Error', 'An error occurred while trying to connect to the server.');
+           });
          }
        });
      } else {
@@ -32,19 +50,19 @@
    };
 
    return (
-     <View>
+     <View style={{ padding: 20 }}>
        <TextInput
          placeholder="Username"
          value={username}
          onChangeText={setUsername}
-         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+         style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
        />
        <TextInput
          placeholder="Password"
          value={password}
          onChangeText={setPassword}
          secureTextEntry={true}
-         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+         style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
        />
        <Button title="Login" onPress={handleLogin} />
      </View>
@@ -52,6 +70,7 @@
  };
 
  export default LoginScreen;
+
 /*
 import React, { useState } from 'react';
 import { SafeAreaView, Text, TextInput, Button, View, StyleSheet, useColorScheme, StatusBar } from 'react-native';
