@@ -2,13 +2,10 @@ package com.dynamicreactnative2.module;
 
 import android.util.Log;
 
-import com.dynamicreactnative2.model.MEncryptedRequest;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-
-import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 
@@ -38,38 +35,7 @@ public class LoginModule extends ReactContextBaseJavaModule {
             @Override
             public void onAction(byte[] bytes, String verificationTokenAsBase64, int result) {
                 Log.d("verification", "verificationTokenAsBase64: " + verificationTokenAsBase64);
-
-                EversafeHelper.getInstance().getEncryptionContext(200, encryptionContext -> {
-                    try {
-                        JSONObject json = new JSONObject();
-                        json.put("user_name", username);
-                        json.put("user_password", password);
-
-                        byte[] bytes1 = json.toString().getBytes();
-
-                        String payload = Base64.encodeBase64String(encryptionContext.encrypt(bytes1));
-                        Log.d("payload", payload);
-
-                        String evToken = kr.co.everspin.eversafe.components.base64.Base64.encodeBase64String(encryptionContext.encrypt(encryptionContext.getVerificationToken()));
-                        Log.d("evToken", evToken);
-
-                        String evEncDesc = kr.co.everspin.eversafe.components.base64.Base64.encodeBase64String(encryptionContext.getContextDescriptor());
-                        Log.d("evEncDesc", evEncDesc);
-
-                        MEncryptedRequest encryptedRequest = new MEncryptedRequest(payload, evToken, evEncDesc);
-                        Log.d("encryptedRequest", encryptedRequest.toString());
-
-                        JSONObject encryptedRequestJson = new JSONObject();
-                        encryptedRequestJson.put("payload", payload);
-                        encryptedRequestJson.put("evToken", evToken);
-                        encryptedRequestJson.put("evEncDesc", evEncDesc);
-
-                        callback.invoke(null, encryptedRequestJson.toString());
-
-                    } catch (Exception e) {
-                        callback.invoke("Error: " + e.getMessage(), null);
-                    }
-                });
+                callback.invoke(null, verificationTokenAsBase64);
             }
         }.setTimeout(10000).execute();
     }
@@ -119,9 +85,7 @@ public class LoginModule extends ReactContextBaseJavaModule {
     }*/
 
 
-
-
-    @ReactMethod
+  /*  @ReactMethod
     public void decrypt(String encryptedPayload, Callback callback) {
         EversafeHelper.getInstance().getEncryptionContext(200, new EncryptionContextAction() {
             @Override
@@ -147,7 +111,7 @@ public class LoginModule extends ReactContextBaseJavaModule {
                 }
             }
         });
-    }
+    }*/
 
 }
 
