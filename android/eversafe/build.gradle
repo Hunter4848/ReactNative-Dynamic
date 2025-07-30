@@ -1,2 +1,5 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('eversafe_android_library-standard-3.10.27.aar'))
+//artifacts.add("default", file('eversafe_android_library-standard-3.10.27.aar'))
+//artifacts.add("default", file('eversafe_android_library-standard-3.10.43.aar'))
+//artifacts.add("default", file('eversafe_android_library-standard-3.10.44.aar'))
+artifacts.add("default", file('eversafe_android_library-standard-3.10.48.aar'))

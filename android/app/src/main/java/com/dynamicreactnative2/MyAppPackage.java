@@ -8,14 +8,14 @@ import com.facebook.react.uimanager.ViewManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.dynamicreactnative2.module.LoginModule;
+import com.dynamicreactnative2.module.EversafeModule;
 
 public class MyAppPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-        modules.add(new LoginModule(reactContext));
+        modules.add(new EversafeModule(reactContext));
         return modules;
     }
 

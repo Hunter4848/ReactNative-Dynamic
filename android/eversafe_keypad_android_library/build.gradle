@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('eversafe_keypad_android_library-1.0.0-en.aar'))

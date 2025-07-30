@@ -2,7 +2,7 @@ package com.dynamicreactnative2.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class MEncryptedRequest {
+public class EversafeRequest {
     
     @SerializedName("payload")
     private String payload;
@@ -13,14 +13,12 @@ public class MEncryptedRequest {
     @SerializedName("evEncDesc")
     private String evEncDesc;
 
-    // Constructor
-    public MEncryptedRequest(String payload, String evToken, String evEncDesc) {
+    public EversafeRequest(String payload, String evToken, String evEncDesc) {
         this.payload = payload;
         this.evToken = evToken;
         this.evEncDesc = evEncDesc;
     }
 
-    // Getter and Setter methods
     public String getPayload() {
         return payload;
     }

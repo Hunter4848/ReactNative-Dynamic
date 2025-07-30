@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="fakefinder_valid">#FF00CD94</color>
+    <color name="fakefinder_invalid">#6096B4</color>
+    <color name="fakefinder_danger">#D71313</color>
+    <color name="fakefinder_warning">#f2be22</color>
+    <color name="fakefinder_not_found">#4d4d4d</color>
+</resources>

@@ -1,4 +1,4 @@
-package com.dynamicreactnative2.response;
+package com.dynamicreactnative2.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -16,7 +16,7 @@ public class EverspinResponse {
     @SerializedName("payload")
     private String payload;
 
-    // Constructor
+
     public EverspinResponse(boolean isResult, String secureStorage, String errorMsg, String payload) {
         this.isResult = isResult;
         this.secureStorage = secureStorage;
@@ -24,7 +24,7 @@ public class EverspinResponse {
         this.payload = payload;
     }
 
-    // Getter and Setter methods
+
     public boolean isResult() {
         return isResult;
     }

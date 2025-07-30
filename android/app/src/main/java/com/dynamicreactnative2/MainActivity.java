@@ -1,14 +1,22 @@
 package com.dynamicreactnative2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import com.secuchart.android.sdk.internal.FakeFinder;
+import java.util.HashMap;
 
 import kr.co.everspin.eversafe.EversafeHelper;
 
 public class MainActivity extends ReactActivity {
+  private static final String TAG = "FakeFinderResult";
+  private int retryEverspin = 0;
+  private final Handler handler = new Handler();
 
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
@@ -46,7 +54,43 @@ public class MainActivity extends ReactActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setTheme(R.style.AppTheme);
-//    EversafeHelper.getInstance().initialize("http://103.96.146.236:4443/eversafe", "539018339F5D7CE8", null);
-    EversafeHelper.getInstance().initialize("http://103.96.146.239:4443/eversafe", "870A5359781713B8", null);
+
+    EversafeService eversafeService = new EversafeService(this);
+    HashMap<String, Object> additionalInfo = new HashMap<>();
+//    additionalInfo.put("serverPublicKeyHashes", new String[]{"RmVKp+h3D32SChiehm0NoLAVScehQTfXHqKS+YsuKKI="});
+//    EversafeHelper.getInstance().initialize("http://103.96.146.239:4443/eversafe", "870A5359781713B8", additionalInfo);
+    // additionalInfo.put("serverPublicKeyHashes", new String[]{"bS0AvWWrr/DWgviFYXtEWljDIfzimiiRLDQZOUgapWM="});
+    additionalInfo.put("serverPublicKeyHashes", new String[]{"yzqUW8DXncnTIPxVYPhFORxljC/zcafCfLZNp8MCdEg="});
+    EversafeHelper.getInstance().initialize("https://eversafe.everspin.my.id/eversafe", "870A5359781713B8", additionalInfo);
+    EversafeHelper.getInstance().setSubscriber(eversafeService);
+
+    // FakeFinder fakeFinderInstance = FakeFinder.getInstance();
+    // fakeFinderInstance.setLicenseKey("6a90ced7191ca4f61a8fe1e201e33c0327742964");
+    // fakeFinderInstance.setSiteId("fakefinderid");
+    // eversafeService.registerFakeFinderCallback();
+    // eversafeService.registerRemoteAppCallback();
+    // fakeFinderInstance.startFakeFinderWithContext(this, eversafeService);
+    // fakeFinderInstance.fetchFakeAppResult();
+    // handler.post(checkRunnable);
+  }
+
+  private final Runnable checkRunnable = new Runnable() {
+    @Override
+    public void run() {
+      if (EversafeService.isFakeFinderStatus && !EversafeService.isEversafeStatus || EversafeService.remoteAppStatus) {
+        Log.d(TAG, "run +" + EversafeService.fakeApps);
+        intentFakeFinderActivity();
+      } else if (retryEverspin < 3) {
+        Log.d(TAG, "retry");
+        retryEverspin++;
+        handler.removeCallbacks(this);
+        handler.postDelayed(this, 2000);
+      }
+    }
+  };
+
+  private void intentFakeFinderActivity() {
+    Intent intent = new Intent(this, FakeFinderActivity.class);
+    startActivity(intent);
   }
 }

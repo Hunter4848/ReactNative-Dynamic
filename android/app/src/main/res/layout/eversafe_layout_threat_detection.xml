@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:id="@+id/eversafe_Linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_margin="32dp">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/Eversafe_Image"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:paddingHorizontal="16dp"
+                app:srcCompat="@drawable/warning" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/Eversafe_Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:text="Text Title"
+                android:textColor="@color/black"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/Eversafe_Message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
+                android:paddingHorizontal="16dp"
+                android:text="Text Message."
+                android:textColor="@color/black"
+                android:textAppearance="?android:textAppearanceMedium" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/Button_CloseEversafe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:background="#0631A4"
+			app:backgroundTint="#0631A4"
+            android:gravity="center"
+            android:text="Close"
+            android:textAlignment="center"
+            android:textColor="#FFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

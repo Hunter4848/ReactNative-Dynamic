@@ -8,3 +8,5 @@ if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true")
     project(":ReactAndroid").projectDir = file('../node_modules/react-native/ReactAndroid')
 }
 include ':eversafe'
+include ':fakefinder'
+include ':eversafe_keypad_android_library'
